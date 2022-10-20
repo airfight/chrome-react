@@ -1,0 +1,39 @@
+{
+    "name": "大A",
+    "description": "Build an Extension!",
+    "version": "1.0",
+    "manifest_version": 3,
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+          "matches": ["*://xtrade.newone.com.cn/*"],
+        // "matches": ["<all_urls>"],
+          "run_at":"document_start",
+          "all_frames": true,
+          "js": ["contentScript.js"]
+        }
+    ],
+    "permissions": ["storage", "activeTab","alarms", "scripting","cookies", "tabs","https://*/*","webRequest","nativeMessaging"],
+    "host_permissions": ["*://xtrade.newone.com.cn/*"],
+    "web_accessible_resources": [{"resources":["*.js"],"matches": ["<all_urls>"]}],
+    "action": {
+
+      "default_icon": {
+
+          "16": "assets/icon16.png",
+
+          "48": "assets/icon48.png",
+
+          "128": "assets/icon128.png"
+
+      },
+
+      "default_title": "Popup",
+
+      "default_popup": "index.html"
+
+  }
+
+}
