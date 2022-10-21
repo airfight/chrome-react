@@ -29,7 +29,7 @@ export default defineConfig({
   })],
 
   build: {
-
+    target: 'esnext',
     rollupOptions: {
 
       input: ["xp.html","index.html","src/page/home/home.jsx","src/chromeconf/background.js", "src/chromeconf/contentScript.js","src/chromeconf/injected.js"],

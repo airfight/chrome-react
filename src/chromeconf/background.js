@@ -1,12 +1,38 @@
 import Api from "./network/api";
-Api.getActualPrice(600058);
+import Sync from "./Util/Sync";
+
+
+const getcms_token = () => {
+  let cms_token = "";
+  chrome.cookies.get({url:"https://xtrade.newone.com.cn/",name:"cms_token"}, (cookies) => {
+    console.log(cookies?.value);
+    cms_token = cookies?.value;
+  })
+  return cms_token;
+}
+
+const onTicker = async (stock) => {
+  
+  const account = Api.getAccount();
+  const ticker = await Api.getTicker(600058);
+  //1 buy 2 sell
+  const zqdm = await Api.gp_inputZqdm(600058,1);
+  console.log("ticker: " + zqdm)
+  console.log("cms_token",getcms_token());
+  chrome.cookies.get({url:"https://xtrade.newone.com.cn/",name:"cms_token"}, async (cookies)  => {
+        const exChangeInfo = await Api.gp_buy(cookies?.value,600058,100,8.45,zqdm);
+        console.log("exChangeInfo"+exChangeInfo);
+  })
+
+}
+
+// const ticker = Sync(getTicker,600058);
+onTicker()
 console.log("后台sw");
 let color = '#3aa757';
 getUrlTab().then((response) => {
     console.log("获取指定URL的tab",response.id);
-    setTimeout(() =>{
-        sendMessageToTab(response.id);
-    },1000 * 5)
+    sendMessageToTab(response.id);
 });
 chrome.runtime.onInstalled.addListener(async () => {
 
@@ -29,7 +55,7 @@ chrome.runtime.onInstalled.addListener(async () => {
     //
     // To view this log message, open chrome://extensions, find "Hello, World!", and click the
     // "service worker" link in the card to open DevTools.
-    console.log(`Created tab ${tab.id}`);
+    // console.log(`Created tab ${tab.id}`);
   });
 
   
@@ -37,7 +63,7 @@ chrome.runtime.onInstalled.addListener(async () => {
 //     console.log("e",e)
 // })
 
-console.log("getAllCookiess",getAllCookiess())
+// console.log("getAllCookiess",getAllCookiess())
 // window.open("http://www.baidu.com");    
 
 function getAllCookiess() {
@@ -169,4 +195,9 @@ async function getCurrentTab() {
     return tradeTabs;
 }
 
+// async function getTicker(stock) {
+//   const ticker = await Api.getTicker(stock);
+//   console.log(ticker)
+//   return ticker;
+// }
 
