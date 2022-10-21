@@ -22,7 +22,7 @@ export default class Api {
      */
     static async getAccount() {
         const url = "https://xtrade.newone.com.cn/capi/zc_getPCKhzc";
-        const data = await FetchUtil.Post(url,{bz:1});
+        const data = await FetchUtil.Post(url,"bz=1");
         console.log("account",data);
         // return new Account(data);
     }
@@ -34,6 +34,17 @@ export default class Api {
         const url = "https://xtrade.newone.com.cn/capi/gp_queryApplyForCancel";
         const data = await FetchUtil.Post(url);
         console.log("可取消",data);
+    }
+
+    //
+
+    /**
+     * 批量取消
+     */
+     static async gp_batchCacnelApply(jytoken) {
+        const url = "https://xtrade.newone.com.cn/capi/gp_batchCacnelApply";
+        const data = await FetchUtil.Post(url,`hth=1-6&jytoken=${jytoken}`);
+        return data;
     }
 
     /**
