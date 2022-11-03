@@ -1,6 +1,6 @@
 import Api from "./network/api";
-
-const exChangeStocks = ["600058"];
+import CommonUtils from "./Util/CommonUtil";
+const exChangeStocks = ["600360"];
 let stockMaxValue = 50000;
 let accountInfo = {};
 const getcms_token = () => {
@@ -12,29 +12,35 @@ const getcms_token = () => {
   return cms_token;
 }
 
-const onTicker = async (stock) => {
+const onTicker = async () => {
   
-  const account = Api.getAccount();
+  const account = await Api.getAccount();
   const orders = await Api.gp_queryApplyForCancel();
 
   for (var i = 0; i < exChangeStocks.length;i++) {
 
     const stock = exChangeStocks[i];
     let isContinue = false;
-    for (var j = 0; j < orders.length; j++) {
+    for (var j = 0; j < orders?.length; j++) {
         if (stock == orders[j].zqdm) {
           isContinue = true;
+          if (CommonUtils.isTimeCanCanleOrder(orders[j]?.wtsj)) {
+            isContinue = false;
+            chrome.cookies.get({url:"https://xtrade.newone.com.cn/",name:"cms_token"}, async (cookies)  => {
+              Api.gp_batchCacnelApply(cookies?.value);
+            })
+          }
           break;
         } 
     }
 
-    if (iscontinue) {
+    if (isContinue) {
       continue;
     }
     const ticker = await Api.getTicker(stock);
 
     // 均衡对比
-    if (false) {
+    if (true) {
       //1 buy 2 sell
       const zqdm = await Api.gp_inputZqdm(stock,1);
       chrome.cookies.get({url:"https://xtrade.newone.com.cn/",name:"cms_token"}, async (cookies)  => {
